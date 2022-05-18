@@ -17,7 +17,30 @@ Spring boot application using Spring Data JPA and REST APIs for creating, editin
 <b>Swagger documentation</b> for all the APIs created can be viewed at http://localhost:8080/swagger-ui/index.html#
 To test the various REST APIs created as part of this application, I have added JUnits for the Controllers and the Services. These Junits are added at `src/test/java/com/example/incidentreport/small`. For end-to-end/integration testing have added Test classes at `src/test/java/com/example/incidentreport/integration`.
 
-CURLs for various APIs exposed(further details and API response code details can be found in Swagger documentation)
+### DB structure
+
+<b>user_detail </b> Table<br/>
+
+| Column Name | Description                              |
+|-------------|------------------------------------------|
+| user_id     | PK                                       |
+| first_name  | First Name                               |
+| last_name   | Last Name                                |
+| user_name   | | 
+
+
+<b>incident</b> Table<br/>
+
+| Column Name  | Description      |
+|--------------|------------------|
+| incident_id  | PK               |
+| status_id    | Mapped to status |
+| title        | Incident title |
+| assignee_id  | FK referencing user_id<br/>(user_detail) | 
+
+
+
+<br/>CURLs for various APIs exposed(further details and API response code details can be found in Swagger documentation)
 Postman Collection of the APIs can be found at https://www.getpostman.com/collections/c2adb7c30eb93d5b83a9
 
 
