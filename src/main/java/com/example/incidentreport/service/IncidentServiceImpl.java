@@ -163,18 +163,10 @@ public class IncidentServiceImpl implements IncidentService {
     private void updateReport(Long incidentId, IncidentReport incidentReport,
                               IncidentStatus status, UserDetail assignee, Incident incident) {
         Incident.Builder incidentBuilder = new Incident.Builder().incidentId(incidentId).creator(incident.getCreator());
-        if(nonNull(incidentReport.getAssignee())) {
-            incidentBuilder.assignee(assignee);
-        }
-        else {
-            incidentBuilder.assignee(incident.getAssignee());
-        }
-        if(isNotEmpty(incidentReport.getTitle())) {
-            incidentBuilder.title(incidentReport.getTitle());
-        }
-        if(isNotEmpty(incidentReport.getStatus())) {
-            incidentBuilder.statusId(status. getValue());
-        }
+        incidentBuilder.assignee(nonNull(incidentReport.getAssignee()) ? assignee : incident.getAssignee());
+        incidentBuilder.title(isNotEmpty(incidentReport.getTitle())? incidentReport.getTitle() : incident.getTitle());
+        incidentBuilder.creator(incident.getCreator());
+        incidentBuilder.statusId(nonNull(status) ? status.getValue() : incident.getStatusId());
         incidentRepository.save(incidentBuilder.build());
     }
 
