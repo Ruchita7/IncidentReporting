@@ -114,7 +114,7 @@ public class IncidentServiceImpl implements IncidentService {
                         .creator(incident.getCreator().getUserName())
                         .assignee(nonNull(incident.getAssignee()) ? incident.getAssignee().getUserName():
                                 StringUtils.EMPTY)
-                        .status(IncidentStatus.getIncidentStatusById(incident.getStatusId()).getName())
+                        .status(getStatus(incident))
                         .incidentId(incident.getIncidentId())
                         .build();
                 incidentReports.add(incidentReport);
@@ -123,12 +123,16 @@ public class IncidentServiceImpl implements IncidentService {
         return new PageImpl<>(incidentReports,pageable,incidentReports.size());
     }
 
+    private String getStatus(Incident incident) {
+        return nonNull(IncidentStatus.getIncidentStatusById(incident.getStatusId())) ?
+                IncidentStatus.getIncidentStatusById(incident.getStatusId()).getName() : StringUtils.EMPTY;
+    }
+
 
     @Override
     public Page<IncidentReport> getIncidents(String status, Pageable pageable) {
         if(nonNull(IncidentStatus.getIncidentStatusByName(status))) {
-            List<Incident> incidentList = incidentRepository.
-                    findIncidentsByStatusId(IncidentStatus.getIncidentStatusByName(status).getValue());
+            List<Incident> incidentList = incidentRepository.findIncidentsByStatusId(getStatusId(status));
             return getIncidentReports(incidentList, pageable);
         }
         else {
@@ -212,5 +216,10 @@ public class IncidentServiceImpl implements IncidentService {
             throw new BadRequestException(String.format(
                     "Current user %s does not have the required permission to delete the report",currentUser));
         }
+    }
+
+    private int getStatusId(String status) {
+        return nonNull(IncidentStatus.getIncidentStatusByName(status)) ?
+                IncidentStatus.getIncidentStatusByName(status).getValue() : Integer.MIN_VALUE;
     }
 }
